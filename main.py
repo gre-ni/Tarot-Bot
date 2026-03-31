@@ -1,9 +1,12 @@
-from get_tarot import get_random_card
+from get_tarot import get_random_card, parse_response, format_dict
 import json
 
 def main():
-    print(get_random_card())
-    print(json.dumps(get_random_card(2), indent=2))
-    
+    amount = 1 # As MVP I am only getting one random card
+    [selected_card] = parse_response(get_random_card(amount)) # Unpacking list with only one card dict
+
+    print(format_dict(selected_card))
+
+
 if __name__ == "__main__":
     main()

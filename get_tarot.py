@@ -1,5 +1,6 @@
 import requests
 import json
+import random
 
 def get_random_card(n: int = 1):
     if n not in range(1, 79):
@@ -10,3 +11,46 @@ def get_random_card(n: int = 1):
         return result.json()
     except requests.RequestException:
         raise
+
+
+def parse_response(info: dict) -> list:
+    '''This function selects only relevant information and picks orientation at random'''
+    parsed_cards = []
+    
+    cards = info["cards"]
+    for card in cards:
+        parsed_card = {}
+        parsed_card["name"] = card["name"]
+        parsed_card["description"] = card["desc"]
+        parsed_card["orientation"] = random.choice(["Upright", "Reversed"])
+        if parsed_card["orientation"] == "Upright":
+            parsed_card["meaning"] = card["meaning_up"]
+        else:
+            parsed_card["meaning"] = card["meaning_rev"]
+        parsed_cards.append(parsed_card)
+        parsed_card["link"] = construct_url(card)
+        
+    return parsed_cards
+
+
+def format_dict(input: dict) -> str:
+    return "\n".join(f"{k.title()}: {v}" for k, v in input.items())
+
+
+# https://biddytarot.com/tarot-card-meanings/major-arcana/hermit
+# https://biddytarot.com/tarot-card-meanings/minor-arcana/suit-of-cups/two-of-cups/
+
+def construct_url(card: dict) -> str:
+    url = "https://biddytarot.com/tarot-card-meanings"
+    type = card["type"]
+    if type == "minor":
+        value = card["value"]
+        suit = card["suit"]
+        return f"{url}/{type}-arcana/suit-of-{suit}/{value}-of-{suit}/"
+    elif type == "major":
+        name = card["name"].replace("The ", "").replace(" ", "-").lower()
+        return f"{url}/{type}-arcana/{name}/"        
+    else:
+        raise ValueError
+
+    
