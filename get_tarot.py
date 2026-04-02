@@ -2,6 +2,14 @@ import requests
 import json
 import random
 
+
+def draw_card(n: int=1):
+    # As MVP I am only getting one random card, function default, eventually prompting for multiple?
+    [selected_card] = parse_response(get_random_card(n)) # Unpacking list with only one card dict
+
+    return format_dict(selected_card)
+
+
 def get_random_card(n: int = 1):
     if n not in range(1, 79):
         raise ValueError(f"Provide a number between 1-78")

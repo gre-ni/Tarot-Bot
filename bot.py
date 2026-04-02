@@ -1,22 +1,23 @@
 import os
 import discord
-from main import main
+from get_tarot import draw_card
 
-intents = discord.Intents.default()
-intents.message_content = True
+def launch_bot():
+    intents = discord.Intents.default()
+    intents.message_content = True
 
-client = discord.Client(intents=intents)
+    client = discord.Client(intents=intents)
 
-@client.event
-async def on_ready():
-    print(f'We have logged in as {client.user}')
+    @client.event
+    async def on_ready():
+        print(f'We have logged in as {client.user}')
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+    @client.event
+    async def on_message(message):
+        if message.author == client.user:
+            return
 
-    if message.content.startswith('$tarot'):
-        await message.channel.send(main())
+        if message.content.startswith('!tarot'):
+            await message.channel.send(draw_card())
 
-client.run(os.getenv("DISCORD_KEY"))
+    client.run(os.getenv("DISCORD_KEY"))
