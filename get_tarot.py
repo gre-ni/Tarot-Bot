@@ -22,23 +22,29 @@ def get_random_card(n: int = 1):
 
 
 def parse_response(info: dict) -> list:
-    '''This function selects only relevant information and picks orientation at random'''
+    '''This function selects only relevant information from API body and picks orientation at random'''
     parsed_cards = []
     
+    if not isinstance(info,dict):
+        raise ValueError("Parse expects dictionary input.")
+    
     cards = info["cards"]
-    for card in cards:
-        parsed_card = {}
-        parsed_card["name"] = card["name"]
-        parsed_card["description"] = card["desc"]
-        parsed_card["orientation"] = random.choice(["Upright", "Reversed"])
-        if parsed_card["orientation"] == "Upright":
-            parsed_card["meaning"] = card["meaning_up"]
-        else:
-            parsed_card["meaning"] = card["meaning_rev"]
-        parsed_cards.append(parsed_card)
-        parsed_card["link"] = construct_url(card)
-        
-    return parsed_cards
+    try:
+        for card in cards:
+            parsed_card = {}
+            parsed_card["name"] = card["name"]
+            parsed_card["description"] = card["desc"]
+            parsed_card["orientation"] = random.choice(["Upright", "Reversed"])
+            if parsed_card["orientation"] == "Upright":
+                parsed_card["meaning"] = card["meaning_up"]
+            else:
+                parsed_card["meaning"] = card["meaning_rev"]
+            parsed_cards.append(parsed_card)
+            parsed_card["link"] = construct_url(card)
+            
+        return parsed_cards
+    except KeyError:
+        raise
 
 
 def format_dict(input: dict) -> str:
