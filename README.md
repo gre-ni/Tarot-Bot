@@ -23,8 +23,8 @@ The bot has following permissions: view channels, send messages, send messages i
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/gre-ni/Tarot-Bot.git
+cd Tarot-Bot
 
 # Virtual environment
 python -m venv venv
