@@ -1,6 +1,10 @@
 import os
 import discord
+import traceback
+from dotenv import load_dotenv
 from get_tarot import draw_card
+
+load_dotenv()
 
 def launch_bot():
     intents = discord.Intents.default()
@@ -18,6 +22,11 @@ def launch_bot():
             return
 
         if message.content.startswith('!tarot'):
-            await message.channel.send(draw_card())
+            try:
+                await message.channel.send(draw_card())
+            except Exception as e:
+                print(f"Error in !tarot command: {e}")
+                traceback.print_exc()
+                await message.channel.send("🔮 The oracle is asleep right now, try again later.")
 
     client.run(os.getenv("DISCORD_KEY"))

@@ -1,13 +1,22 @@
 import requests
 import json
 import random
+from tabulate import tabulate
 
 
 def draw_card(n: int=1):
     # As MVP I am only getting one random card, function default, eventually prompting for multiple?
     [selected_card] = parse_response(get_random_card(n)) # Unpacking list with only one card dict
 
-    return format_dict(selected_card)
+    return format_dict_to_str(selected_card)
+
+
+def print_card(n: int=1):
+    # Just one card
+    selected_card = parse_response(get_random_card())[0]
+    
+    print(tabulate(format_dict_to_list(selected_card)), tablefmt="plain")
+    
 
 
 def get_random_card(n: int = 1):
@@ -43,12 +52,20 @@ def parse_response(info: dict) -> list:
             parsed_card["link"] = construct_url(card)
             
         return parsed_cards
-    except KeyError:
-        raise
+    
+    except KeyError as e:
+        raise ValueError(f"Unexpected API response format, missing field: {e}")
 
 
-def format_dict(input: dict) -> str:
+def format_dict_to_str(input: dict) -> str:
     return "\n".join(f"{k.title()}: {v}" for k, v in input.items())
+
+# Reformat to list of list to use tabulate on for printing to terminal:
+def format_dict_to_list(input: dict) -> list:
+    list_format = []
+    for k, v in input.items():
+        list_format.append([k.title(), v])
+    return list_format
 
 
 # https://biddytarot.com/tarot-card-meanings/major-arcana/hermit
