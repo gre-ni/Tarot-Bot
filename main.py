@@ -5,6 +5,7 @@ import sys
 
 def main():
     
+    # print_card() -> use to test output in terminal
     launch_bot()
 
 

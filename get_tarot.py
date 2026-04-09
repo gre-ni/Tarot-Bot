@@ -13,9 +13,9 @@ def draw_card(n: int=1):
 
 def print_card(n: int=1):
     # Just one card
-    selected_card = parse_response(get_random_card())[0]
+    [selected_card] = parse_response(get_random_card())
     
-    print(tabulate(format_dict_to_list(selected_card)), tablefmt="plain")
+    print(tabulate(format_dict_to_list(selected_card), tablefmt="plain"))
     
 
 
@@ -26,8 +26,8 @@ def get_random_card(n: int = 1):
     try:
         result = requests.get("https://tarotapi.dev/api/v1/cards/random", params={"n": n})
         return result.json()
-    except requests.RequestException:
-        raise
+    except requests.RequestException as e:
+        raise RuntimeError(f"Failed to reach the Tarot API: {e}")
 
 
 def parse_response(info: dict) -> list:
